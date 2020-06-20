@@ -1,3 +1,5 @@
+#date: 20/06/2020
+
 import math
 def findPythagoreanTriplets(nums):
     # list with the squared nums
