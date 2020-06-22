@@ -1,5 +1,7 @@
 # date: 17/06/2020
 
+# Given a positive integer n, find all primes less than n.
+
 def find_primes(n):
     if n < 1:
         return []
