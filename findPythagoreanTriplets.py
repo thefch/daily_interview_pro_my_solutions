@@ -1,5 +1,8 @@
 #date: 20/06/2020
 
+# Given a list of numbers, find if there exists a pythagorean triplet in that list. 
+# A pythagorean triplet is 3 variables a, b, c where a^2 + b^2 = c^2
+
 import math
 def findPythagoreanTriplets(nums):
     # list with the squared nums
