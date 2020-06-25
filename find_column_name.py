@@ -6,86 +6,92 @@
 # Then starting from the 27th column it uses AA, AB, ..., ZZ, AAA, etc
 # Given a number n, find the n-th column name.
 
-
-# initialize alphabet list
-MAX_COLUMN = 26
-alphabet = [chr(i) for i in range(65,65+MAX_COLUMN,1)]
-
-
-# return the length of the column name
-def get_range(n):
-    count = 0
-    while True:
-        count += 1
-        # every 26 letters is one char-space
-        if n <= MAX_COLUMN:
-            return count
-
-        n = reduce(n)
-
-# return the letter from the alphabet
-def get(n):
-    # find the letter if index is more than 26
-    while n > MAX_COLUMN:
-        n = reduce(n)
-    return alphabet[n-1]
-
-def reduce(n):
-    return n- MAX_COLUMN
-
+ALPHABET_LEN = 26
+alphabet = [chr(i) for i in range(65,65+ALPHABET_LEN,1)]
+class Node:
+    def __init__(self,val):
+        self.value = val
+        self.children = []
     
-def column_name(n):        
-    print('\nn:',n)
-    rounds = get_range(n)
-    print('rounds:',rounds)
+    def __str__(self):
+        out =''
+        if self.children != None:
+            out += ' '*(len(self.children))
+            out += str(self.value) 
+        else:
+            out += str(self.value)
+        out +='\n| '
+        for j,i in enumerate(self.children):
+            out += i.value + ' '+str(j)+' | '
+        return out
     
-    # get column name when >=26
-    if n <= MAX_COLUMN:  
-        return get(n)
-    else:
-        out = ''
-        index = n
-        for i in range(rounds) :
-            out += get(n-MAX_COLUMN)
-            if n < 26:
-                out += get(0)
-                break
+    def add_letter_children(self):        
+        for i in alphabet:
+            self.children.append(Node(str(self.value)+i))
+    
+class Tree:
+    def __init__(self,val):
+        self.root = Node(val)
 
-            # if index <=26 : 
-
-            #     out += get(MAX_COLUMN-MAX_COLUMN+i)
-            # else:
-            #     out += get(MAX_COLUMN-MAX_COLUMN+i)
-
-            # index -= n -MAX_COLUMN 
-
-            # if modulo is 0, get the first letter
-            # eg. 27 -> AA not ZA
-            # if index % MAX_COLUMN == 0:
-            #     out += get(MAX_COLUMN-MAX_COLUMN+i)
-            # else:
-            #     out += get(index-MAX_COLUMN)
-            #     index -= n -MAX_COLUMN 
-                
-        # reverse string
-        return out[len(out)::-1]
+        self.init()
+    
+    def __str__(self):
+        return str(self.root)
         
-   
-# print(column_name(26))#Z
-# print(column_name(27))#AA
-# print(column_name(28))#AB
-# print(column_name(29))#AC
-# print(column_name(30))#AD
-# print(column_name(MAX_COLUMN))#Z
-# print(column_name(MAX_COLUMN*MAX_COLUMN-26))#
+    def init(self):
+        node = self.root
+        for i,x in enumerate(alphabet):
+            node.children.append(Node(x))
+        
+        for i,x in enumerate(alphabet):
+            node.children[i].add_letter_children()
+            for j,y in enumerate(alphabet):
+                node.children[i].children[j].add_letter_children()     
+                  
+        
+    
+class Solution:
+    def __init__(self):
+        pass
+    
+    def column_name(self,num):
+        tree = Tree('')
+        node = tree.root
+        count =0
+        letter = None
+        j=0
+        
+        while True:
 
-# for i in range(0,30,1):
-#     print(column_name(i))
+            for i,x in enumerate(node.children):
+                current_letter = str(x.value)
+                if count == num-1:
+                    letter = current_letter
+                # print(current_letter,end=' ')
+                count +=1
+                
+                
+            if j >= 3:
+                break
+            # # print([j.value for j in node.children])
+            # print(j)
+            node = node.children[j]
+            # print(j)
+            
+            j+=1
+        return letter
+        
+        
+        
 
-# needs to be corrected for these kind of values
-# not sure the results
-# print(column_name(300))#???
+print(Solution().column_name(26))#Z
+print(Solution().column_name(27))#AA
+print(Solution().column_name(28))#AB
+print(Solution().column_name(29))#AC
+print(Solution().column_name(30))#AD
+print(Solution().column_name(ALPHABET_LEN))#Z
+
+print(Solution().column_name(200))#Z
 
 
-for i in range(0,MAX_COLUMN*MAX_COLUMN,1):
-    print('i:',i,' ',get_range(i))
+    
